@@ -23,7 +23,7 @@ int main() {
     Cria_arv_disc(&(raizCursos), cod);
 
     //Cria_arv_disc(&(raizCursos), cod);
-
+    //oi
     //imprimirDisciplinas(raizCursos); 
     Imprimir_disc_em_ordem_curso(raizCursos, cod);
 

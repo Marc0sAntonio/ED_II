@@ -23,7 +23,7 @@ int main() {
     Cria_arv_disc(&(raizCursos), cod_curso);
 
     //Cria_arv_disc(&(raizCursos), cod);
-    //oi
+    //oii
     //imprimirDisciplinas(raizCursos); 
     Imprimir_disc_em_ordem_curso(raizCursos, cod_curso);
     printf("\nDigite o codigo do curso da disciplina que deseja ver as informações: ");

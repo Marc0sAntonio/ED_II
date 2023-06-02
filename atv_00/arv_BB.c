@@ -96,7 +96,7 @@ void Imprime_cursos_crescente(Curso *raizCursos)
         printf("Nome do curso: %s\n", raizCursos->_nome_curso);
         printf("Quantidade de blocos: %d\n", raizCursos->_qtd_blocos);
         printf("Quantidade de semanas: %d\n", raizCursos->_qtd_seman);
-        printf("\n================================");
+        printf("\n================================\n");
         Imprime_cursos_crescente(raizCursos->dir);
     }
 }
@@ -112,7 +112,7 @@ void Imprime_por_cod(Curso *raizCursos, int cod) // como o codigo é unico, não
             printf("Nome do curso: %s\n", aux->_nome_curso);
             printf("Quantidade de blocos: %d\n", aux->_qtd_blocos);
             printf("Quantidade de semanas: %d\n", aux->_qtd_seman);
-            printf("\n================================");
+            printf("\n================================\n");
         }
         else printf("Curso não encontrado!\n");
     }
@@ -130,7 +130,7 @@ void Imprime_cursos_bloco(Curso *raizCursos, int blocos) // como o codigo é uni
             printf("Nome do curso: %s\n", raizCursos->_nome_curso);
             printf("Quantidade de blocos: %d\n", raizCursos->_qtd_blocos);
             printf("Quantidade de semanas: %d\n", raizCursos->_qtd_seman);
-            printf("\n================================");
+            printf("\n================================\n");
         }
         Imprime_cursos_bloco(raizCursos->dir, blocos);
     }
@@ -203,6 +203,9 @@ void Cria_arv_disc(Curso** raizCursos, int cod_curso) {
         Curso* meu_curso = Busca_cod_curso(*raizCursos, cod_curso);
         if (meu_curso != NULL) {
             Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
+            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
+            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
+            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
         }else 
             printf("\ncurso não encontrado!\n");
         
@@ -212,7 +215,7 @@ void Cria_arv_disc(Curso** raizCursos, int cod_curso) {
 void Imprimir_disc_em_ordem(Disciplina* raizDisciplinas) {
     if (raizDisciplinas != NULL) {
         Imprimir_disc_em_ordem(raizDisciplinas->esq);
-        printf("Código: %d, Nome: %s\n", raizDisciplinas->_cod, raizDisciplinas->_nome_disciplina);
+        printf("\nCódigo: %d, Nome: %s\n", raizDisciplinas->_cod, raizDisciplinas->_nome_disciplina);
         Imprimir_disc_em_ordem(raizDisciplinas->dir);
     }
 }
@@ -226,10 +229,40 @@ void Imprimir_disc_em_ordem_curso(Curso* raizCursos, int cod_curso) {
         if (raizDisciplinas != NULL) {
             Imprimir_disc_em_ordem(raizDisciplinas);
         } else {
-            printf("Não há disciplinas cadastradas para o curso %d.\n", cod_curso);
+            printf("\nNão há disciplinas cadastradas para o curso %d.\n", cod_curso);
         }
     } else {
-        printf("O curso com código %d não foi encontrado.\n", cod_curso);
+        printf("\nO curso com código %d não foi encontrado.\n", cod_curso);
+    }
+}
+
+void Imprime_dados_disc(Disciplina* minha_disciplina)
+{
+    if (minha_disciplina != NULL) {
+        printf("\n================================\n");
+        printf("Código: %d\n", minha_disciplina->_cod);
+        printf("Nome: %s\n", minha_disciplina->_nome_disciplina);
+        printf("Carga horária: %d horas\n", minha_disciplina->_carga_horaria);
+        printf("Bloco: %d\n", minha_disciplina->_bloco);
+        printf("\n================================\n");
+    }
+}
+
+void Imprimir_disc_por_cod(Curso* raizCursos, int cod_curso, int cod_disc) 
+{
+    Curso* meu_curso = Busca_cod_curso(raizCursos, cod_curso);
+
+    if (meu_curso != NULL) {
+        Disciplina* raizDisciplinas = meu_curso->_arv_disciplinas;
+
+        if (raizDisciplinas != NULL) {
+            Disciplina* minha_disc = Busca_cod_disc(raizDisciplinas, cod_disc);
+            Imprime_dados_disc(minha_disc);
+        } else {
+            printf("\nNão há disciplinas cadastradas para o curso %d.\n", cod_curso);
+        }
+    } else {
+        printf("\nO curso com código %d não foi encontrado.\n", cod_curso);
     }
 }
 
@@ -241,10 +274,10 @@ void Imprimir_disc_em_ordem_curso(Curso* raizCursos, int cod_curso) {
 // (2) Imprimir os dados de um curso dado o código do mesmo;
 // (3) Imprimir todos os cursos com a mesma quantidade de blocos, onde o usuário informe a quantidade 
 // de blocos;
-
 // (4) Imprimir a árvore de disciplinas em ordem crescente pelo código das disciplinas dado o código do 
 // curso;
 // (5) Imprimir os dados de uma disciplina dado o código dela e do curso ao qual ela pertence;
+
 // (6) Imprimir as disciplinas de um determinado bloco de um curso, dado o bloco e o código do curso;
 // (7) Imprimir todas as disciplinas de um determinado curso com a mesma carga horária, onde o código 
 // do curso e a carga horária devem ser informadas pelo usuário;

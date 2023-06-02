@@ -38,3 +38,8 @@ void Cria_arv_disc(Curso** raizCursos, int cod_curso);
 void Imprimir_disc_em_ordem(Disciplina* raizDisciplinas);
 
 void Imprimir_disc_em_ordem_curso(Curso* raizCursos, int cod_curso);
+
+void Imprime_dados_disc(Disciplina* minha_disciplina);
+
+void Imprimir_disc_por_cod(Curso* raizCursos, int cod_curso, int cod_disc);
+

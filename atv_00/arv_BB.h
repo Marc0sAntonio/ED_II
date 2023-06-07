@@ -43,3 +43,10 @@ void Imprime_dados_disc(Disciplina* minha_disciplina);
 
 void Imprimir_disc_por_cod(Curso* raizCursos, int cod_curso, int cod_disc);
 
+void Imprime_dados_disc_bloco(Disciplina *minha_disciplina, int bloco);
+
+void Imprime_disc_do_bloco(Curso* raizCursos, int cod_curso, int bloco);
+
+void Imprime_dados_disc_horas(Disciplina *minha_disciplina, int carga_horaria);
+
+void Imprime_disc_por_horas(Curso* raizCursos, int cod_curso, int carga_horaria);

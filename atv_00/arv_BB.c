@@ -346,16 +346,13 @@ void Excluir_disciplina_por_cod_Aux(Disciplina** raizDisciplinas, int cod_disc)
     if((*raizDisciplinas)->_cod == cod_disc) 
     {
         if ((*raizDisciplinas)->esq == NULL && (*raizDisciplinas)->dir == NULL) {
-            // Caso 1: A raiz não possui filhos
             free(*raizDisciplinas);
             *raizDisciplinas = NULL;
         } else if ((*raizDisciplinas)->esq != NULL && (*raizDisciplinas)->dir != NULL) {
-            // Caso 2: A raiz possui dois filhos
             Disciplina* temp = encontrarMinimo((*raizDisciplinas)->dir);
             (*raizDisciplinas)->_cod = temp->_cod;
             Excluir_disciplina_por_cod_Aux(&(*raizDisciplinas)->dir, temp->_cod);
         } else {
-            // Caso 3: A raiz possui apenas um filho
             Disciplina* temp = *raizDisciplinas;
             if ((*raizDisciplinas)->esq != NULL) {
                 *raizDisciplinas = (*raizDisciplinas)->esq;
@@ -365,10 +362,8 @@ void Excluir_disciplina_por_cod_Aux(Disciplina** raizDisciplinas, int cod_disc)
             free(temp);
         }
     } else if ((*raizDisciplinas)->_cod > cod_disc) {
-        // O nó a ser removido está à esquerda da raiz
         Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->esq), cod_disc);
     } else {
-        // O nó a ser removido está à direita da raiz
         Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->dir), cod_disc);
     }
 }

@@ -148,7 +148,7 @@ Disciplina *Busca_cod_disc(Disciplina *raizDisciplinas, int cod)
     else if(cod < raizDisciplinas->_cod)
         Busca_cod_disc(raizDisciplinas->esq, cod);
     else 
-        Busca_cod_disc(raizDisciplinas->esq, cod);
+        Busca_cod_disc(raizDisciplinas->dir, cod);
 }
 
 int Cria_cod_unico_disc(Disciplina *raizDisciplinas) 
@@ -214,7 +214,7 @@ void Cria_arv_disc(Curso** raizCursos, int cod_curso) {
 void Imprimir_disc_em_ordem(Disciplina* raizDisciplinas) {
     if (raizDisciplinas != NULL) {
         Imprimir_disc_em_ordem(raizDisciplinas->esq);
-        printf("\nCódigo: %d, Nome: %s\n", raizDisciplinas->_cod, raizDisciplinas->_nome_disciplina);
+        printf("\nCódigo: %d, Nome: %s, Bloco: %d\n", raizDisciplinas->_cod, raizDisciplinas->_nome_disciplina, raizDisciplinas->_bloco);
         Imprimir_disc_em_ordem(raizDisciplinas->dir);
     }
 }
@@ -234,7 +234,7 @@ void Imprimir_disc_em_ordem_curso(Curso* raizCursos, int cod_curso) {
 }
 
 void Imprime_dados_disc(Disciplina* minha_disciplina)
-{
+{   printf("\nEntrei aqui\n");
     if (minha_disciplina != NULL) {
         printf("\n================================\n");
         printf("Código: %d\n", minha_disciplina->_cod);
@@ -266,20 +266,20 @@ void Imprimir_disc_por_cod(Curso* raizCursos, int cod_curso, int cod_disc)
 }
 
 void Imprime_dados_disc_bloco(Disciplina *minha_disciplina, int bloco)
-{   printf("\ncoxinha123\n");
+{   
     if(minha_disciplina != NULL)
     {
+        Imprime_dados_disc_bloco(minha_disciplina->esq, bloco);
         if(minha_disciplina->_bloco == bloco)
         {
-            Imprime_dados_disc_bloco(minha_disciplina->esq, bloco);
             printf("\n================================\n");
             printf("Código: %d\n", minha_disciplina->_cod);
             printf("Nome: %s\n", minha_disciplina->_nome_disciplina);
             printf("Carga horária: %d horas\n", minha_disciplina->_carga_horaria);
             printf("Bloco: %d\n", minha_disciplina->_bloco);
             printf("\n================================\n");
-            Imprime_dados_disc_bloco(minha_disciplina->dir, bloco);
         }
+        Imprime_dados_disc_bloco(minha_disciplina->dir, bloco);
     }
 }
 
@@ -302,17 +302,17 @@ void Imprime_dados_disc_horas(Disciplina *minha_disciplina, int carga_horaria)
 {   printf("\ncoxinha123\n");
     if(minha_disciplina != NULL)
     {
+        Imprime_dados_disc_bloco(minha_disciplina->esq, carga_horaria);
         if(minha_disciplina->_carga_horaria == carga_horaria)
         {
-            Imprime_dados_disc_bloco(minha_disciplina->esq, carga_horaria);
             printf("\n================================\n");
             printf("Código: %d\n", minha_disciplina->_cod);
             printf("Nome: %s\n", minha_disciplina->_nome_disciplina);
             printf("Carga horária: %d horas\n", minha_disciplina->_carga_horaria);
             printf("Bloco: %d\n", minha_disciplina->_bloco);
             printf("\n================================\n");
-            Imprime_dados_disc_bloco(minha_disciplina->dir, carga_horaria);
         }
+        Imprime_dados_disc_bloco(minha_disciplina->dir, carga_horaria);
     }
 }
 
@@ -323,16 +323,68 @@ void Imprime_disc_por_horas(Curso* raizCursos, int cod_curso, int carga_horaria)
         Curso* meu_curso = Busca_cod_curso(raizCursos, cod_curso);
 
         if(meu_curso != NULL)
-            Imprime_dados_disc_bloco(meu_curso->_arv_disciplinas, carga_horaria);
+            Imprime_dados_disc_horas(meu_curso->_arv_disciplinas, carga_horaria);
         else
             printf("\nO curso com código %d não foi encontrado.\n", cod_curso);
     }else
         printf("\nLista de cursos vazia!\n");
 }
 
-void Excluir_disciplina_por_cod(Curso** raizCursos, int cod_curso, int cod_disc)
-{
 
+Curso* encontrarMinimo(Curso* raizCursos) {
+    if (raizCursos->esq == NULL) {
+        return raizCursos;
+    }
+    return encontrarMinimo(raizCursos->esq);
+}
+
+void Excluir_disciplina_por_cod_Aux(Disciplina** raizDisciplinas, int cod_disc)
+{
+    if (*raizDisciplinas == NULL) {
+        return;
+    }
+    if((*raizDisciplinas)->_cod == cod_disc) 
+    {
+        if ((*raizDisciplinas)->esq == NULL && (*raizDisciplinas)->dir == NULL) {
+            // Caso 1: A raiz não possui filhos
+            free(*raizDisciplinas);
+            *raizDisciplinas = NULL;
+        } else if ((*raizDisciplinas)->esq != NULL && (*raizDisciplinas)->dir != NULL) {
+            // Caso 2: A raiz possui dois filhos
+            Disciplina* temp = encontrarMinimo((*raizDisciplinas)->dir);
+            (*raizDisciplinas)->_cod = temp->_cod;
+            Excluir_disciplina_por_cod_Aux(&(*raizDisciplinas)->dir, temp->_cod);
+        } else {
+            // Caso 3: A raiz possui apenas um filho
+            Disciplina* temp = *raizDisciplinas;
+            if ((*raizDisciplinas)->esq != NULL) {
+                *raizDisciplinas = (*raizDisciplinas)->esq;
+            } else {
+                *raizDisciplinas = (*raizDisciplinas)->dir;
+            }
+            free(temp);
+        }
+    } else if ((*raizDisciplinas)->_cod > cod_disc) {
+        // O nó a ser removido está à esquerda da raiz
+        Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->esq), cod_disc);
+    } else {
+        // O nó a ser removido está à direita da raiz
+        Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->dir), cod_disc);
+    }
+}
+
+
+void Excluir_disciplina_por_cod(Curso** raizCursos, int cod_curso, int cod_disc) {
+    if (*raizCursos == NULL)
+    {
+        return;
+    }    
+    if((*raizCursos)->_cod == cod_curso) 
+        Excluir_disciplina_por_cod_Aux(&((*raizCursos)->_arv_disciplinas), cod_disc);
+    else if ((*raizCursos)->_cod > cod_disc) 
+        Excluir_disciplina_por_cod(&((*raizCursos)->esq), cod_curso, cod_disc);
+    else 
+        Excluir_disciplina_por_cod(&((*raizCursos)->dir), cod_curso, cod_disc);
 }
 
 

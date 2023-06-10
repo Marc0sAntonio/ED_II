@@ -57,6 +57,11 @@ int main() {
     Excluir_disciplina_por_cod(&raizCursos, cod_curso, cod_disc);
     printf("\nDisciplinas do curso apos a remocao: ");
     Imprimir_disc_em_ordem_curso(raizCursos, cod_curso); 
+
+    printf("\nDigite o codigo do curso que deseja excluir");
+    scanf("%d", &cod_curso);
+    Excluir_curso(&raizCursos, cod_curso);
+    Imprime_cursos_crescente(raizCursos);
     
     return 0;
 }

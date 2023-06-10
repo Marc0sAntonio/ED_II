@@ -6,7 +6,7 @@
 
 int main() {
     srand(time(NULL));
-    int cod_curso = 0,cod_disc = 0, bloco = 0;
+    int cod_curso = 0,cod_disc = 0, bloco = 0, carga_h = 0;
     Curso *raizCursos;
     //Disciplina *raizDisciplinas = NULL;
     raizCursos = NULL;
@@ -43,5 +43,20 @@ int main() {
     Imprime_disc_do_bloco(raizCursos, cod_curso, bloco);
     
 
+    printf("\nDigite o codigo do curso que deseja ver as disciplinas de mesma carga horaria: ");
+    scanf("%d", &cod_curso);
+    printf("\nDigite a carga horaria: ");
+    scanf("%d", &carga_h);
+    Imprime_disc_por_horas(raizCursos, cod_curso, carga_h);
+
+
+    printf("\nDigite o codigo do curso que deseja excluir a disciplina: ");
+    scanf("%d", &cod_curso);
+    printf("\nDigite o codigo da disciplina que deseja excluir: ");
+    scanf("%d", &cod_disc);
+    Excluir_disciplina_por_cod(&raizCursos, cod_curso, cod_disc);
+    printf("\nDisciplinas do curso apos a remocao: ");
+    Imprimir_disc_em_ordem_curso(raizCursos, cod_curso); 
+    
     return 0;
 }

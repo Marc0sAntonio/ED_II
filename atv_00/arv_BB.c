@@ -400,25 +400,29 @@ void Excluir_curso(Curso** raizCursos, int cod_curso)
         return;
     }
     if((*raizCursos)->_cod == cod_curso){ 
-        // O nó a ser removido é a raiz da árvore
-        if ((*raizCursos)->esq == NULL && (*raizCursos)->dir == NULL) {
-            // Caso 1: A raiz não possui filhos
-            free(*raizCursos);
-            *raizCursos = NULL;
-        } else if ((*raizCursos)->esq != NULL && (*raizCursos)->dir != NULL) {
-            // Caso 2: A raiz possui dois filhos
-            Curso* temp = encontrarMinimo_curso((*raizCursos)->dir);
-            (*raizCursos)->_cod = temp->_cod;
-            Excluir_curso(&(*raizCursos)->dir, temp->_cod);
-        } else {
-            // Caso 3: A raiz possui apenas um filho
-            Curso* temp = *raizCursos;
-            if ((*raizCursos)->esq != NULL) 
-                *raizCursos = (*raizCursos)->esq;
-            else 
-                *raizCursos = (*raizCursos)->dir;
-            
-            free(temp);
+        if(((*raizCursos)->_arv_disciplinas) != NULL)
+            printf("\nO curso informado não pode ser excluido, pois há disciplinas cadastradas nesse curso!\n");
+        else{
+            // O nó a ser removido é a raiz da árvore
+            if ((*raizCursos)->esq == NULL && (*raizCursos)->dir == NULL) {
+                // Caso 1: A raiz não possui filhos
+                free(*raizCursos);
+                *raizCursos = NULL;
+            } else if ((*raizCursos)->esq != NULL && (*raizCursos)->dir != NULL) {
+                // Caso 2: A raiz possui dois filhos
+                Curso* temp = encontrarMinimo_curso((*raizCursos)->dir);
+                (*raizCursos)->_cod = temp->_cod;
+                Excluir_curso(&(*raizCursos)->dir, temp->_cod);
+            } else {
+                // Caso 3: A raiz possui apenas um filho
+                Curso* temp = *raizCursos;
+                if ((*raizCursos)->esq != NULL) 
+                    *raizCursos = (*raizCursos)->esq;
+                else 
+                    *raizCursos = (*raizCursos)->dir;
+                
+                free(temp);
+            }
         }
     } else if ((*raizCursos)->_cod > cod_curso)
         Excluir_curso(&((*raizCursos)->esq), cod_curso);

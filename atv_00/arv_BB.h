@@ -2,11 +2,6 @@ typedef struct disciplina Disciplina;
 
 typedef struct curso Curso;
 
-
-/*
-
-int Busca_cod_curso(Curso *raizCursos, int cod_curso); 
-*/
 Curso *Busca_cod_curso(Curso *raizCursos, int cod);
 
 int Cria_cod_unico_curso(Curso *raizCursos);
@@ -50,3 +45,13 @@ void Imprime_disc_do_bloco(Curso* raizCursos, int cod_curso, int bloco);
 void Imprime_dados_disc_horas(Disciplina *minha_disciplina, int carga_horaria);
 
 void Imprime_disc_por_horas(Curso* raizCursos, int cod_curso, int carga_horaria);
+
+Disciplina *encontrarMinimo_disc(Disciplina* raizDisciplinas);
+
+void Excluir_disciplina_por_cod_Aux(Disciplina** raizDisciplinas, int cod_disc);
+
+void Excluir_disciplina_por_cod(Curso** raizCursos, int cod_curso, int cod_disc);
+
+Curso* encontrarMinimo_curso(Curso* raizCursos);
+
+void Excluir_curso(Curso** raizCursos, int cod_curso);

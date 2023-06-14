@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "arv_BB.h"
+#include "arv_AVL.h"
 #include <time.h>
 
 void exibirMenu() {
@@ -101,9 +101,6 @@ int main() {
                 printf("Informe o código do curso: ");
                 scanf("%d", &cod_curso);
                 Excluir_curso(&raizCursos, cod_curso);
-                printf("\nCursos após a remoção:\n");
-                Imprime_cursos_crescente(raizCursos);
-                break;
             case 0:
                 printf("\nSaindo do programa...\n");
                 break;

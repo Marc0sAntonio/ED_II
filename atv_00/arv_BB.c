@@ -201,13 +201,15 @@ void Cria_arv_disc(Curso** raizCursos, int cod_curso) {
     if (raizCursos != NULL){
         Curso* meu_curso = Busca_cod_curso(*raizCursos, cod_curso);
         if (meu_curso != NULL) {
-            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
-            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Sistemas Operacionais", 3, 60);
-            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Arquitetura", 3, 60);
-            Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "POO II", 4, 60);
-        }else 
-            printf("\ncurso não encontrado!\n");
-        
+            for(int i = 0; i < 10;i++)
+            {
+                Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
+            }
+            // Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
+            // Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Sistemas Operacionais", 3, 60);
+            // Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "Arquitetura", 3, 60);
+            // Insere_disc(meu_curso, &(meu_curso->_arv_disciplinas), "POO II", 4, 60);
+        }
     }
 }
 
@@ -300,10 +302,10 @@ void Imprime_disc_do_bloco(Curso* raizCursos, int cod_curso, int bloco)
 
 
 void Imprime_dados_disc_horas(Disciplina *minha_disciplina, int carga_horaria)
-{   printf("\ncoxinha123\n");
+{   
     if(minha_disciplina != NULL)
     {
-        Imprime_dados_disc_bloco(minha_disciplina->esq, carga_horaria);
+        Imprime_dados_disc_horas(minha_disciplina->esq, carga_horaria);
         if(minha_disciplina->_carga_horaria == carga_horaria)
         {
             printf("\n================================\n");
@@ -313,7 +315,7 @@ void Imprime_dados_disc_horas(Disciplina *minha_disciplina, int carga_horaria)
             printf("Bloco: %d\n", minha_disciplina->_bloco);
             printf("\n================================\n");
         }
-        Imprime_dados_disc_bloco(minha_disciplina->dir, carga_horaria);
+        Imprime_dados_disc_horas(minha_disciplina->dir, carga_horaria);
     }
 }
 
@@ -332,115 +334,3 @@ void Imprime_disc_por_horas(Curso* raizCursos, int cod_curso, int carga_horaria)
 }
 
 
-
-Disciplina* encontrarMinimo_disc(Disciplina* raizDisciplinas) {
-    if (raizDisciplinas->esq == NULL) {
-        return raizDisciplinas;
-    }
-    return encontrarMinimo_disc(raizDisciplinas->esq);
-}
-
-void Excluir_disciplina_por_cod_Aux(Disciplina** raizDisciplinas, int cod_disc)
-{
-    if (*raizDisciplinas == NULL) {
-        return;
-    }
-    if((*raizDisciplinas)->_cod == cod_disc) 
-    {
-        if ((*raizDisciplinas)->esq == NULL && (*raizDisciplinas)->dir == NULL) {
-            free(*raizDisciplinas);
-            *raizDisciplinas = NULL;
-        } else if ((*raizDisciplinas)->esq != NULL && (*raizDisciplinas)->dir != NULL) {
-            Disciplina* temp = encontrarMinimo_disc((*raizDisciplinas)->dir);
-            (*raizDisciplinas)->_cod = temp->_cod;
-            Excluir_disciplina_por_cod_Aux(&(*raizDisciplinas)->dir, temp->_cod);
-        } else {
-            Disciplina* temp = *raizDisciplinas;
-            if ((*raizDisciplinas)->esq != NULL) {
-                *raizDisciplinas = (*raizDisciplinas)->esq;
-            } else {
-                *raizDisciplinas = (*raizDisciplinas)->dir;
-            }
-            free(temp);
-        }
-    } else if ((*raizDisciplinas)->_cod > cod_disc) {
-        Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->esq), cod_disc);
-    } else {
-        Excluir_disciplina_por_cod_Aux(&((*raizDisciplinas)->dir), cod_disc);
-    }
-}
-
-void Excluir_disciplina_por_cod(Curso** raizCursos, int cod_curso, int cod_disc) {
-    if (*raizCursos == NULL)
-    {
-        return;
-    }    
-    if((*raizCursos)->_cod == cod_curso){ 
-        Excluir_disciplina_por_cod_Aux(&((*raizCursos)->_arv_disciplinas), cod_disc);
-    } else if ((*raizCursos)->_cod > cod_curso){ 
-        Excluir_disciplina_por_cod(&((*raizCursos)->esq), cod_curso, cod_disc);
-    } else{ 
-        Excluir_disciplina_por_cod(&((*raizCursos)->dir), cod_curso, cod_disc);
-    }
-}
-
-
-
-Curso* encontrarMinimo_curso(Curso* raizCursos) {
-    if (raizCursos->esq == NULL) {
-        return raizCursos;
-    }
-    return encontrarMinimo_curso(raizCursos->esq);
-}
-
-void Excluir_curso(Curso** raizCursos, int cod_curso)
-{
-    if (*raizCursos == NULL)
-    {
-        return;
-    }
-    if((*raizCursos)->_cod == cod_curso){ 
-        if(((*raizCursos)->_arv_disciplinas) != NULL)
-            printf("\nO curso informado não pode ser excluido, pois há disciplinas cadastradas nesse curso!\n");
-        else{
-            // O nó a ser removido é a raiz da árvore
-            if ((*raizCursos)->esq == NULL && (*raizCursos)->dir == NULL) {
-                // Caso 1: A raiz não possui filhos
-                free(*raizCursos);
-                *raizCursos = NULL;
-            } else if ((*raizCursos)->esq != NULL && (*raizCursos)->dir != NULL) {
-                // Caso 2: A raiz possui dois filhos
-                Curso* temp = encontrarMinimo_curso((*raizCursos)->dir);
-                (*raizCursos)->_cod = temp->_cod;
-                Excluir_curso(&(*raizCursos)->dir, temp->_cod);
-            } else {
-                // Caso 3: A raiz possui apenas um filho
-                Curso* temp = *raizCursos;
-                if ((*raizCursos)->esq != NULL) 
-                    *raizCursos = (*raizCursos)->esq;
-                else 
-                    *raizCursos = (*raizCursos)->dir;
-                
-                free(temp);
-            }
-        }
-    } else if ((*raizCursos)->_cod > cod_curso)
-        Excluir_curso(&((*raizCursos)->esq), cod_curso);
-    else
-        Excluir_curso(&((*raizCursos)->dir), cod_curso);
-    
-}
-
-// (1) Imprimir a árvore de cursos em ordem crescente pelo código do curso;
-// (2) Imprimir os dados de um curso dado o código do mesmo;
-// (3) Imprimir todos os cursos com a mesma quantidade de blocos, onde o usuário informe a quantidade 
-// de blocos;
-// (4) Imprimir a árvore de disciplinas em ordem crescente pelo código das disciplinas dado o código do 
-// curso;
-// (5) Imprimir os dados de uma disciplina dado o código dela e do curso ao qual ela pertence;
-// (6) Imprimir as disciplinas de um determinado bloco de um curso, dado o bloco e o código do curso;
-// (7) Imprimir todas as disciplinas de um determinado curso com a mesma carga horária, onde o código 
-// do curso e a carga horária devem ser informadas pelo usuário;
-// (8) Excluir uma disciplina dado o código da disciplina e o código do curso;
-// (9) Excluir um curso dado o código do mesmo, desde que não tenha nenhuma disciplina cadastrada para 
-// aquele curso

@@ -51,7 +51,7 @@ int Cria_cod_unico_curso(Curso *raizCursos)
     return (cod_curso);
 }
 
-//balanceamento
+//balanceament
 void Rotacao_esq_curso(Curso **raizCursos) {
     Curso *aux, *filho;
 
@@ -59,8 +59,8 @@ void Rotacao_esq_curso(Curso **raizCursos) {
     filho = aux->esq;
     aux->esq = *raizCursos;
     (*raizCursos)->dir = filho;
-    AtualizaAlturaCurso(raizCursos);
-    AtualizaAlturaCurso(&aux);
+    Atualiza_altura_curso(raizCursos);
+    Atualiza_altura_curso(&aux);
 
     *raizCursos = aux; 
 }
@@ -79,23 +79,19 @@ void Rotacao_dir_curso(Curso **raizCursos) {
 }
 
 int Altura_no_curso(Curso *curso) {
-    int h;
-    if (curso) {
-        h = curso->altura;
-    }
-    else {
-        h = -1;
-    }
-    return (h);
+    int alt;
+    if (curso) 
+        alt = curso->altura;
+    else 
+        alt = -1;
+    return (alt);
 }
 
 int Fb_curso(Curso *curso) {
-    if (curso) {
+    if (curso)
         return (Altura_no_curso(curso->esq) - Altura_no_curso(curso->dir));
-    }
-    else {
+    else 
         return 0;
-    }
 }
 
 void Atualiza_altura_curso(Curso **raizCursos) {
@@ -103,24 +99,24 @@ void Atualiza_altura_curso(Curso **raizCursos) {
 }
 
 int Calcula_altura_curso(Curso *raizCursos) {
-    int esq, dir, h;
+    int alt, esq, dir;
 
     if (raizCursos == NULL) {
-        h = -1;
+        alt = -1;
     }
     else {
         esq = Calcula_altura_curso(raizCursos->esq);
         dir = Calcula_altura_curso(raizCursos->dir);
 
         if (esq > dir) {
-            h = esq + 1;
+            alt = esq + 1;
         }
         else {
-            h = dir + 1;
+            alt = dir + 1;
         }
     }
 
-    return (h);
+    return (alt);
 }
 
 void Balanceia_cursos(Curso **raizCursos) {
@@ -150,7 +146,7 @@ void InsereCurso(Curso **raizCursos, Curso *Novo) {
             InsereCurso(&((*raizCursos)->dir), Novo);
     }
 
-    Balancear_cursos(raizCursos);
+    Balanceia_cursos(raizCursos);
     Atualiza_altura_curso(raizCursos);
 }
 
@@ -168,17 +164,17 @@ void Cria_curso(Curso **raizCursos,int cod_curso, char *nome_curso, int qtd_bloc
     Novo->esq = NULL;
     Novo->altura = 0;
 
-    Insere_curso(&(*raizCursos), Novo);
+    InsereCurso(&(*raizCursos), Novo);
 }
 
 
 
 void Cria_arv_cursos(Curso **raizCurso) {
-    inserirCurso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "Pão", 5, 25);
-    inserirCurso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "sistemas", 5, 15);
-    inserirCurso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "biologia", 8, 15);
-    inserirCurso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "Oraoci", 3, 15);
-    inserirCurso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "biologia", 4, 15);
+    Cria_curso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "Pão", 5, 25);
+    Cria_curso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "sistemas", 5, 15);
+    Cria_curso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "biologia", 8, 15);
+    Cria_curso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "Oraoci", 3, 15);
+    Cria_curso(&(*raizCurso), Cria_cod_unico_curso(*raizCurso), "biologia", 4, 15);
 }
 
 void Imprime_cursos_crescente(Curso *raizCursos)
@@ -232,6 +228,90 @@ void Imprime_cursos_bloco(Curso *raizCursos, int blocos) // como o codigo é uni
 }
 
 
+int Eh_folha_curso(Curso *raizCursos) {
+    int EhFolha = 0;
+    if (raizCursos->esq == NULL && raizCursos->dir == NULL) {
+        EhFolha = 1;
+    }
+
+    return (EhFolha);
+}
+
+int Dois_filhos_curso(Curso *raizCursos) {
+    int DoisFilhos = 0;
+    if (raizCursos->esq != NULL && raizCursos->dir != NULL) {
+        DoisFilhos = 1;
+    }
+
+    return (DoisFilhos);
+}
+
+Curso* Maior_esq_curso(Curso *raizCursos) {
+    if (raizCursos->dir != NULL) {
+        return Maior_esq_curso(raizCursos->dir);
+    }
+    else {
+        return raizCursos;
+    }
+}
+
+Curso* Curso_filho(Curso *raizCursos) {
+    if (raizCursos->esq != NULL) {
+        return (raizCursos->esq);
+    }
+    else {
+        return (raizCursos->dir);
+    }
+}
+
+void Excluir_curso(Curso **raizCursos, int CodCurso) {
+    int removeu = 1;
+
+    if ((*raizCursos) != NULL) {
+        Curso *Aux, *Filho;
+
+        if ((*raizCursos)->_cod == CodCurso) {
+            if ((*raizCursos)->_arv_disciplinas != NULL) {
+                removeu = 0;
+                printf("\nO curso possui disciplinas cadastradas!\n");
+            }
+            else {
+                if (Eh_folha_curso(*raizCursos)) {
+                    Aux = (*raizCursos);
+                    (*raizCursos) = NULL;
+                }
+                else if (Dois_filhos_curso(*raizCursos)) {
+                    Filho = Maior_esq_curso(*raizCursos);
+                    Aux = (*raizCursos);
+                    Filho->dir = (*raizCursos)->dir;
+                    (*raizCursos) = (*raizCursos)->esq;
+                }
+                else {
+                    Filho = Curso_filho(*raizCursos);
+                    Aux = (*raizCursos);
+                    (*raizCursos) = Filho;
+                }
+                free(Aux);
+                removeu = 0;
+                printf("\nCurso removido com sucesso!\n");
+            } 
+        }
+        else if ((*raizCursos)->_cod > CodCurso) {
+            Excluir_curso(&((*raizCursos)->esq), CodCurso);
+        }
+        else {
+            Excluir_curso(&((*raizCursos)->dir), CodCurso);    
+        }
+    }
+    
+    if (removeu == 0 && (*raizCursos) != NULL) {
+        Balanceia_cursos(raizCursos);
+        Atualiza_altura_curso(raizCursos);
+    } 
+
+}
+
+
 Disciplina *Busca_cod_disc(Disciplina *raizDisciplinas, int cod)
 {   
     if (raizDisciplinas == NULL || raizDisciplinas->_cod == cod)
@@ -253,13 +333,136 @@ int Cria_cod_unico_disc(Disciplina *raizDisciplinas)
     return cod_disc;
 }
 
-/// 
+
+//balanceament
+void Rotacao_esq_disciplina(Disciplina **raizDisc) {
+    Disciplina *aux, *filho;
+
+    aux = (*raizDisc)->dir;
+    filho = aux->esq;
+    aux->esq = *raizDisc;
+    (*raizDisc)->dir = filho;
+    Atualiza_altura_disc(raizDisc);
+    Atualiza_altura_disc(&aux);
+
+    *raizDisc = aux; 
+}
+
+void Rotacao_dir_disciplina(Disciplina **raizDisc) {
+    Disciplina *aux, *filho;
+
+    aux = (*raizDisc)->esq;
+    filho = aux->dir;
+    aux->dir = *raizDisc;
+    (*raizDisc)->esq = filho;
+    Atualiza_altura_disc(raizDisc);
+    Atualiza_altura_disc(&aux);
+
+    *raizDisc = aux;
+}
+
+int Altura_no_disciplina(Disciplina *disciplina) {
+    int alt;
+    if (disciplina) 
+        alt = disciplina->altura;
+    else 
+        alt = -1;
+    return (alt);
+}
+
+int Fb_disc(Disciplina *disciplina) {
+    if (disciplina)
+        return (Altura_no_disciplina(disciplina->esq) - Altura_no_disciplina(disciplina->dir));
+    else 
+        return 0;
+}
+
+void Atualiza_altura_disc(Disciplina **raizDisc) {
+    (*raizDisc)->altura = Calcula_altura_disc(*raizDisc);
+}
+
+int Calcula_altura_disc(Disciplina *raizDisc) {
+    int alt, esq, dir;
+
+    if (raizDisc == NULL) {
+        alt = -1;
+    }
+    else {
+        esq = Calcula_altura_disc(raizDisc->esq);
+        dir = Calcula_altura_disc(raizDisc->dir);
+
+        if (esq > dir) {
+            alt = esq + 1;
+        }
+        else {
+            alt = dir + 1;
+        }
+    }
+
+    return (alt);
+}
+
+void Balanceia_disc(Disciplina **raizDisc) {
+    int fb;
+    fb = Fb_disc(*raizDisc);
+
+    if (fb == -2) {
+        if (Fb_disc((*raizDisc)->dir) > 0) 
+            Rotacao_dir_disciplina(&((*raizDisc)->dir));
+        Rotacao_esq_disciplina(raizDisc);
+    }else if (fb == 2) {
+        if (Fb_disc((*raizDisc)->esq) < 0) 
+            Rotacao_esq_disciplina(&((*raizDisc)->esq));
+        Rotacao_dir_disciplina(raizDisc);
+    }
+}
+
+
+void Insere_disc(Disciplina **raizDisc, Disciplina *Novo) {
+    if ((*raizDisc) == NULL) {
+        *raizDisc = Novo;
+    }
+    else {
+        if (Novo->_cod < (*raizDisc)->_cod) 
+            Insere_disc(&((*raizDisc)->esq), Novo);
+        else 
+            Insere_disc(&((*raizDisc)->dir), Novo);
+    }
+
+    Balanceia_disc(raizDisc);
+    Atualiza_altura_disc(raizDisc);
+}
+
+
+
+void Cria_disciplina(int cod_curso, Disciplina **raizDisc, int cod_disc, char *nome, int bloco, int carga_h) {
+
+
+        Disciplina *Nova = (Disciplina *)malloc(sizeof(Disciplina));
+
+        if (Busca_cod_disc(*raizDisc, cod_disc) != NULL) {
+            Nova->_cod = Cria_cod_unico_disc(*raizDisc);
+        }
+        else Nova->_cod = cod_disc;
+
+        strcpy(Nova->_nome_disciplina, nome);
+        Nova->_bloco = bloco;
+        Nova->_carga_horaria = carga_h;
+        Nova->esq = NULL;
+        Nova->dir = NULL;
+        Nova->altura = 0;
+
+        Insere_disc(&(*raizDisc), Nova);
+        printf("\nDisciplina criada com sucesso!\n");
+}
+
+
 void Cria_arv_disc(Curso** raizCursos, int cod_curso)
 {
-    for(int i = 0; i < 10; i++)
-    {
-        inserirDisciplina(*raizCursos, &((*raizCursos)->_arv_disciplinas), Cria_cod_unico_disc((*raizCursos)->_arv_disciplinas), "Estrutura de Dados II", 4, 60);
-    }
+    Curso *meu_curso = Busca_cod_curso(*raizCursos, cod_curso);
+    for(int i = 0; i < 10; i++){
+        Cria_disciplina(cod_curso, &(meu_curso->_arv_disciplinas), i + 1, "Estrutura de Dados II", 4, 60);
+    } 
 }
 
 
@@ -379,201 +582,96 @@ void Imprime_disc_por_horas(Curso* raizCursos, int cod_curso, int carga_horaria)
     }else
         printf("\nLista de cursos vazia!\n");
 }
+///AQUIIIII
 
-
-Disciplina* encontrarMinimo_disc(Disciplina* raizDisciplinas) {
-    if (raizDisciplinas->esq == NULL) {
-        return raizDisciplinas;
+int Eh_folha_disc(Disciplina *raizDisc) {
+    int EhFolha = 0;
+    if (raizDisc->esq == NULL && raizDisc->dir == NULL) {
+        EhFolha = 1;
     }
-    return encontrarMinimo_disc(raizDisciplinas->esq);
+
+    return (EhFolha);
 }
 
-void Excluir_disciplina_Aux(Disciplina** raizDisciplinas, int cod_disciplina)
-{   
-    //tem que balancear depois
-    int excluiu = 0;
-    if(*raizDisciplinas != NULL)
-    {
-        if((*raizDisciplinas)->_cod == cod_disciplina)
-        {
-            if((*raizDisciplinas)->esq == NULL && (*raizDisciplinas)->dir == NULL)
-            {
-                free(*raizDisciplinas);
-                *raizDisciplinas = NULL;
-                excluiu = 1;
-            }else if((*raizDisciplinas)->esq == NULL)
-            {
-                Disciplina* aux = *raizDisciplinas;
-                *raizDisciplinas = (*raizDisciplinas)->dir;
-                free(aux);
-                excluiu = 1;
-            }else if((*raizDisciplinas)->dir == NULL)
-            {
-                Disciplina* aux = *raizDisciplinas;
-                *raizDisciplinas = (*raizDisciplinas)->esq;
-                free(aux);
-                excluiu = 1;
-            }else
-            {
-                Disciplina* aux = encontrarMinimo_disc((*raizDisciplinas)->dir);
-                (*raizDisciplinas)->_cod = aux->_cod;
-                Excluir_disciplina_Aux(&(*raizDisciplinas)->dir, aux->_cod);
-                excluiu = 1;
-            }
-        }else if((*raizDisciplinas)->_cod > cod_disciplina)
-            Excluir_disciplina_Aux(&(*raizDisciplinas)->esq, cod_disciplina);
-        else
-            Excluir_disciplina_Aux(&(*raizDisciplinas)->dir, cod_disciplina);
+int Dois_filhos_disc(Disciplina *raizDisc) {
+    int DoisFilhos = 0;
+    if (raizDisc->esq != NULL && raizDisc->dir != NULL) {
+        DoisFilhos = 1;
     }
-    if(excluiu)
-    {
-        (*raizDisciplinas)->altura = Max(Altura_disciplina((*raizDisciplinas)->esq), Altura_disciplina((*raizDisciplinas)->dir)) + 1;
-        int balanco = Fator_bal_disciplina(*raizDisciplinas);
-        if(balanco > 1 && Fator_bal_disciplina((*raizDisciplinas)->esq) >= 0)
-            Rotacao_dir_disciplina(raizDisciplinas);
-        if(balanco > 1 && Fator_bal_disciplina((*raizDisciplinas)->esq) < 0)
-        {
-            Rotacao_esq_disciplina(&(*raizDisciplinas)->esq);
-            Rotacao_dir_disciplina(raizDisciplinas);
-        }
-        if(balanco < -1 && Fator_bal_disciplina((*raizDisciplinas)->dir) <= 0)
-            Rotacao_esq_disciplina(raizDisciplinas);
-        if(balanco < -1 && Fator_bal_disciplina((*raizDisciplinas)->dir) > 0)
-        {
-            Rotacao_dir_disciplina(&(*raizDisciplinas)->dir);
-            Rotacao_esq_disciplina(raizDisciplinas);
-        }
-        
+
+    return (DoisFilhos);
+}
+
+Disciplina* Maior_esq_disc(Disciplina *raizDisc) {
+    if (raizDisc->dir != NULL) {
+        return Maior_esq_disc(raizDisc->dir);
+    }
+    else {
+        return raizDisc;
     }
 }
 
-void Excluir_disciplina(Curso** raizCursos, int cod_disciplina, int cod_curso)
+Disciplina* Disc_filho(Disciplina *raizDisc) {
+    if (raizDisc->esq != NULL) {
+        return (raizDisc->esq);
+    }
+    else {
+        return (raizDisc->dir);
+    }
+}
+
+void Excluir_disc_Aux(Disciplina** raizDisc, int CodDisciplina, int *removeu)
 {
-    if(raizCursos != NULL)
+    if((*raizDisc)->_cod == CodDisciplina)
     {
-        if(*raizCursos != NULL)
-        {
-            int excluiu = 0;
-            Curso* meu_curso = Busca_cod_curso(raizCursos, cod_curso);
-            if(meu_curso)
-            {
-                Disciplina* minha_disciplina = Busca_cod_disc(meu_curso->_arv_disciplinas, cod_disciplina);
-                if(minha_disciplina)
-                {
-                    Excluir_disciplina_Aux(&meu_curso->_arv_disciplinas, cod_disciplina);
-                    excluiu = 1;
-                }else   
-                    printf("\nDisciplina não encontrada!\n");
-            }else   
-                printf("\nCurso não encontrado!\n");
-            if(excluiu)
-                printf("\nDisciplina excluída com sucesso!\n");
-        }else
-            printf("\nLista de cursos vazia!\n");
-    }else
-        printf("\nLista de cursos vazia!\n");
+        Disciplina *Aux, *Filho;
+        if (Eh_folha_disc(*raizDisc)) {
+            Aux = (*raizDisc);
+            (*raizDisc) = NULL;
+        }
+        else if (Dois_filhos_disc(*raizDisc)) {
+            Filho = Maior_esq_disc(*raizDisc);
+            Aux = (*raizDisc);
+            Filho->dir = (*raizDisc)->dir;
+            (*raizDisc) = (*raizDisc)->esq;
+        }
+        else {
+            Filho = Disc_filho(*raizDisc);
+            Aux = (*raizDisc);
+            (*raizDisc) = Filho;
+        }
+            free(Aux);
+            *removeu = 0;
+            printf("\nDisciplina removida com sucesso!\n");
+    }else if(CodDisciplina > (*raizDisc)->_cod)
+        Excluir_disc_Aux(&((*raizDisc)->dir), CodDisciplina, removeu);
+    else
+        Excluir_disc_Aux(&((*raizDisc)->esq), CodDisciplina, removeu);
 }
 
+void Excluir_disc(Curso **raizCursos, int CodCurso, int CodDisciplina) {
+    int removeu = 1;
 
-void Excluir_curso_Aux(Curso** raizCursos, int cod_curso)
-{   
-    //tem que balancear depois
-    int excluiu = 0;
-    if(*raizCursos != NULL)
-    {
-        if((*raizCursos)->_cod == cod_curso)
-        {
-            if((*raizCursos)->esq == NULL && (*raizCursos)->dir == NULL)
-            {
-                free(*raizCursos);
-                *raizCursos = NULL;
-                excluiu = 1;
-            }else if((*raizCursos)->esq == NULL)
-            {
-                Curso* aux = *raizCursos;
-                *raizCursos = (*raizCursos)->dir;
-                free(aux);
-                excluiu = 1;
-            }else if((*raizCursos)->dir == NULL)
-            {
-                Curso* aux = *raizCursos;
-                *raizCursos = (*raizCursos)->esq;
-                free(aux);
-                excluiu = 1;
-            }else
-            {
-                Curso* aux = encontrarMinimo_curso((*raizCursos)->dir);
-                (*raizCursos)->_cod = aux->_cod;
-                Excluir_curso_Aux(&(*raizCursos)->dir, aux->_cod);
-                excluiu = 1;
-            }
-        }else if((*raizCursos)->_cod > cod_curso)
-            Excluir_curso_Aux(&(*raizCursos)->esq, cod_curso);
-        else
-            Excluir_curso_Aux(&(*raizCursos)->dir, cod_curso);
+    if ((*raizCursos) != NULL) {
+
+        if ((*raizCursos)->_cod == CodCurso) {
+            if ((*raizCursos)->_arv_disciplinas != NULL)
+                Excluir_disc_Aux(&((*raizCursos)->_arv_disciplinas), CodDisciplina, &removeu);
+        }
+        else if ((*raizCursos)->_cod > CodCurso) 
+            Excluir_disc(&((*raizCursos)->esq), CodCurso, CodDisciplina);
+        else 
+            Excluir_disc(&((*raizCursos)->dir), CodCurso, CodDisciplina);    
     }
-    if(excluiu)
-    {
-        (*raizCursos)->altura = Max(Altura_curso((*raizCursos)->esq), Altura_curso((*raizCursos)->dir)) + 1;
-        int balanco = Fator_bal_curso(*raizCursos);
-        if(balanco > 1 && Fator_bal_curso((*raizCursos)->esq) >= 0)
-            Rotacao_dir_curso(raizCursos);
-        if(balanco > 1 && Fator_bal_curso((*raizCursos)->esq) < 0)
-        {
-            Rotacao_esq_curso(&(*raizCursos)->esq);
-            Rotacao_dir_curso(raizCursos);
-        }
-        if(balanco < -1 && Fator_bal_curso((*raizCursos)->dir) <= 0)
-            Rotacao_esq_curso(raizCursos);
-        if(balanco < -1 && Fator_bal_curso((*raizCursos)->dir) > 0)
-        {
-            Rotacao_dir_curso(&(*raizCursos)->dir);
-            Rotacao_esq_curso(raizCursos);
-        }
+    
+    if (removeu == 0 && (*raizCursos)->_arv_disciplinas != NULL) {
+        Balanceia_disc(&((*raizCursos)->_arv_disciplinas));
+        Atualiza_altura_disc(&((*raizCursos)->_arv_disciplinas));
+    } 
 
-    }
 }
 
-void Excluir_curso(Curso** raizCursos, int cod_curso)
-{
-    if(raizCursos != NULL)
-    {
-        if(*raizCursos != NULL)
-        {
-            int excluiu = 0;
-            Curso* meu_curso = Busca_cod_curso(raizCursos, cod_curso);
-            if(meu_curso)
-            {
-                Excluir_disciplinas(&meu_curso->_arv_disciplinas);
-                Excluir_curso_Aux(raizCursos, cod_curso);
-                excluiu = 1;
-            }else   
-                printf("\nCurso não encontrado!\n");
-            if(excluiu)
-                printf("\nCurso excluído com sucesso!\n");
-        }else
-            printf("\nLista de cursos vazia!\n");
-    }else
-        printf("\nLista de cursos vazia!\n");
-}
 
-/*
-if(raizCursos != NULL)
-    {
-        if(*raizDisciplinas != NULL)
-        {
-            int excluiu = 0;
-            Curso* meu_curso = Busca_cod_curso(raizCursos, cod_curso);
-            if(meu_curso)
-            {
-                Disciplina* minha_disciplina = Busca_cod_disc(meu_curso->_arv_disciplinas, cod_disciplina);
-                if(minha_disciplina)
-                {
-                    
-            }else   
-                printf("\nCurso não encontrado!\n");
-        }
-    }*/
 
 
 
